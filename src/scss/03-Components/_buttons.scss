@@ -1,0 +1,9 @@
+@use '../01-Abstracts'as *;
+
+.btn {
+    @include btn();
+}
+
+.btn-outlined {
+    @include btn($type: outlined);
+}

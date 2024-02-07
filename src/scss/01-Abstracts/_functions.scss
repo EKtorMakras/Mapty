@@ -1,0 +1,115 @@
+@use 'sass:math';
+
+//& ******* Custom props ******* //
+// Return custom prop with prefix
+@function getColor($name, $prefix: clr) {
+    @return var(--#{$prefix}-#{$name});
+}
+
+
+//& ******* Px Conversions ******* //
+// Convert px to em
+@function em($pixels, $context: 16) {
+    @return (math.div($pixels, $context)) * 1em;
+}
+
+
+// Convert px to rem
+@function rem($pixels, $context: 16) {
+    @return (math.div($pixels, $context)) * 1rem;
+}
+
+
+//& ******* Other ******* //
+// Separates string to arguments by delimiter
+@function str-explode($string, $delimiter: '') {
+
+  @if type-of($string) !='string' {
+    @error 'The argument $string: `#{$string}` is of incorrect type: `#{type-of($string)}`. Type of `String` is required!';
+  }
+
+  @else if type-of($delimiter) !='string' {
+    @error 'The argument $string: `#{$string}` is of incorrect type: `#{type-of($string)}`. Type of `String` is required!';
+  }
+
+
+  $result: ();
+  $running: true;
+
+  @if str-length($delimiter)==0 {
+    @for $i from 1 through str-length($string) {
+        $result: append($result, str-slice($string, $i, $i));
+    }
+
+    @return $result;
+  }
+
+  @while $running {
+    $index: str-index($string, $delimiter);
+
+    @if $index !=null {
+        $item: str-slice($string, 1, ($index - 1));
+        $result: append($result, $item);
+        $string: str-slice($string, ($index + str-length($delimiter)));
+    }
+
+    @else {
+        $running: false;
+    }
+  }
+
+  @return append($result, $string);
+}
+
+// Get values of nested map
+@function deep-map-get($map, $keys...) {
+
+  @if type-of($map) !='map' {
+      @error "The argument $map: '#{$map}' is of incorrect type: #{type-of($map)}.Type of 'map' is required.";
+  }
+
+  @each $key in $keys {
+      $map: map-get($map, $key);
+  }
+
+  @return $map;
+}
+
+
+@function colorTest($color-name, $color-variant: null, $true-val: false) { //https://codepen.io/jakealbaugh/post/css4-variables-and-sass
+  // if we enable css var
+  @if $use-css-var == true {
+    // we need to return the color value
+    @if $true-val == true {
+      // color variant is optional
+      @if ($color-variant != null) {
+        // map inception, need two deep
+        @return map-get(map-get($color-themes, $color-name), $color-variant);
+      } @else {
+        // Default color
+        @return map-get(map-get($color-themes, $color-name), base);
+      } // if we're only returning the CSS4 variable
+    } 
+    @else {
+      // color variant is optional
+      @if ($color-variant != null) {
+        // map inception, need two names
+        @return var(#{$color-prefix}#{$color-name}-#{$color-variant});
+      } @else {
+        // Default color, one name
+        @return var(#{$color-prefix}#{$color-name}-base);
+      }
+    }
+  } 
+  @else {
+    // color variant is optional
+    @if ($color-variant != null) {
+      // map inception, need two deep
+      @return map-get(map-get($color-themes, $color-name), $color-variant);
+    } @else {
+      // Default color
+      @return map-get(map-get($color-themes, $color-name), base);
+    }
+  }
+}
+

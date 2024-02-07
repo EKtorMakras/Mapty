@@ -1,0 +1,20 @@
+@use '../01-Abstracts'as *;
+
+.section {
+  padding: 5rem 0;
+
+  &-center {
+    width: 90vw;
+    @include center-mar;
+    max-width: $max-width;
+
+    @include mq-min(992px) {
+      width: 95vw;
+    }
+  }
+
+  &-title {
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+}

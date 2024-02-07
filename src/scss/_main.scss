@@ -1,0 +1,321 @@
+@use "01-Abstracts/"as *;
+
+html, body {
+  height: 100%;
+}
+
+.sidebar {
+  flex-basis: 50rem;
+  background-color: getColor(gray-dark-1);
+  padding: 3rem 5rem 4rem 5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  height: 5.2rem;
+  align-self: center;
+  margin-bottom: 4rem;
+}
+
+
+//@ ************  Workouts  ************ //
+.workouts {
+  list-style: none;
+  height: 77vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+}
+
+.workout {
+  background-color: getColor(gray-dark-2);
+  border-radius: 5px;
+  padding: 1.5rem 2.25rem;
+  margin-bottom: 1.75rem;
+  position: relative;
+  cursor: pointer;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0.75rem 1.5rem;
+
+  &--running {
+    border-left: 5px solid getColor(secondary-base);
+  }
+
+  &--cycling {
+    border-left: 5px solid getColor(primary-base);
+  }
+
+  &__header {
+    grid-column: 1 / -1;
+    @include flex(row, space-between, start);
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 1.7rem;
+    font-weight: 600;
+  }
+
+
+  &__actions {
+    @include flex($gap: 12px);
+    line-height: 1;
+    margin-top: -2px;
+  }
+
+  &__action {
+    font-size: 1.6rem;
+    transition: $transition;
+
+    &--edit {
+      color: getColor(emerald-400);
+
+      &:hover {
+        color: getColor(emerald-600);
+      }
+    }
+
+    &--delete {
+      color: getColor(rose-400);
+
+      &:hover {
+        color: getColor(rose-600);
+      }
+    }
+  }
+
+  &__details {
+    display: flex;
+    align-items: baseline;
+  }
+
+  &__icon {
+    font-size: 1.8rem;
+    margin-right: 0.2rem;
+    height: 0.28rem;
+  }
+
+  &__value {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
+
+  &__unit {
+    font-size: 1.1rem;
+    color: getColor(gray-light-1);
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+  
+}
+//@ ************  End Of Workouts  ************ //
+
+
+//@ ************  Form  ************ //
+.form {
+  background-color: getColor(gray-dark-2);
+  border-radius: 5px;
+  padding: 1.5rem 2.75rem;
+  margin-bottom: 1.75rem;
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 20px repeat(3, 1fr);
+  gap: 0.5rem 2.5rem;
+
+  /* Match height and activity boxes */
+  // height: 9.25rem;
+  transition: all 0.5s, transform 1ms;
+
+  &.hidden {
+    transform: translateY(-30rem);
+    height: 0;
+    padding: 0 2.25rem;
+    margin-bottom: 0;
+    opacity: 0;
+  }
+
+  &__header {
+    grid-column: 1/-1;
+    @include flex($justify: end);
+    margin-top: -10px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+
+    &--hidden {
+      display: none;
+    }
+  }
+
+  &__label {
+    flex: 0 0 50%;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.3rem 1.1rem;
+    font-family: inherit;
+    font-size: 1.4rem;
+    border: none;
+    border-radius: 3px;
+    background-color: getColor(gray-light-3);
+    color: getColor(slate-600);
+    transition: all 0.2s;
+
+    &:focus {
+      outline: none;
+      background-color: #fff;
+    }
+  }
+
+   &__close-icon {
+    font-size: 1.7rem;
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    transition: $transition;
+    color: getColor(zinc-400);
+
+    &:hover {
+      color: getColor(zinc-300);
+    }
+   }
+
+  &__btn {
+    @include btn($bgColor: color('secondary.600'));
+    width: 60%;
+    margin-top: 1rem;
+    padding: .7rem 1rem !important;
+    letter-spacing: 2px;
+  }
+}
+//@ ************  End Of Form  ************ //
+
+// Twitter Link
+.twitter-link {
+ &:link,
+ &:visited {
+   color: getColor(gray-light-1);
+   transition: all 0.2s;
+ }
+
+ &:hover,
+ &:active {
+   color: getColor(gray-light-2);
+ }
+}
+
+// Copyright
+.copyright {
+  margin-top: auto;
+  font-size: 1.3rem;
+  text-align: center;
+  color: getColor(gray-light-1);
+}
+
+// Starting Hint
+.starting-hint {
+  @include center-pos;
+  color: getColor(zinc-300);
+  font-size: 2rem;
+  width: 100%;
+
+  i{
+    color: getColor(primary-base);
+  }
+}
+
+// Clear workouts
+.clear-workouts {
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: getColor(rose-400);
+  transition: $transition;
+
+  &:hover {
+    color: getColor(rose-500);
+  }
+}
+
+
+//@ ************  Map  ************ //
+#map {
+ flex: 1;
+ height: 100%;
+ background-color: getColor(gray-light-1);
+}
+
+/* Popup width is defined in JS using options */
+.leaflet-popup {
+ .leaflet-popup-content-wrapper {
+   background-color: getColor(gray-dark-1);
+   color: getColor(gray-light-2);
+   border-radius: 5px;
+   padding-right: 0.6rem;
+ }
+
+ .leaflet-popup-content {
+   font-size: 1.5rem;
+ }
+
+ .leaflet-popup-tip {
+   background-color: getColor(gray-dark-1);
+ }
+}
+
+.running-popup {
+ .leaflet-popup-content-wrapper {
+   border-left: 5px solid getColor(secondary-base);
+ }
+}
+
+.cycling-popup {
+ .leaflet-popup-content-wrapper {
+   border-left: 5px solid getColor(primary-base);
+ }
+}
+//@ ************  End Of Map  ************ //
+
+
+
+// -------------------------------------------- Comments --------------------------------------------------- //
+
+//* ***************************************   Comment  *************************************** //
+//* ***************************************  End Of Comment  *************************************** //
+
+
+//& ********************************  Comment  ******************************** //
+//& ********************************  End Of Comment  ******************************** //
+
+
+//$ *******************  Comment  ******************* $//
+//$ *******************  End Of Comment  ******************* $//
+
+
+//% ***************  Comment  *************** //
+//% ***************  End Of Comment  *************** //
+
+
+//@ ************  Comment  ************ //
+//@ ************  End Of Comment  ************ //
+
+
+//# ********  Comment  ******** //
+//# ********  End Of Comment  ******** //
+
+
+//^ *****  Comment  ***** //
+//^ *****  End Of Comment  ***** //

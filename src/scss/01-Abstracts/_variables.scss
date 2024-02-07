@@ -1,0 +1,350 @@
+@use "functions"as *;
+
+
+//& **********************************  Colors  ********************************** //
+$colors: ( 
+
+    //% ***************  General  *************** //
+    "black": #000,
+    "white": #fff,
+
+    "red-dark": #842029,
+    "red-light": #f8d7da,
+
+    "green-dark": #0f5132,
+    "green-light": #d1e7dd,
+
+    'error':#d32752, 
+    //% ***************    *************** //
+
+
+    //% ***************  Socials  *************** //
+    'facebook': #3b5998,
+    'twitter': #00acee,
+    'linkedin': #0072b1,
+    'youtube': #ff0000,
+    'instagram': linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%),
+    
+
+    //% ***************  Gray  *************** //
+    'gray': ( 
+
+        /* General ones */
+        "generic-1": #999,
+        "generic-2": #777,
+        "generic-3": #555,
+        "generic-4": #333,
+
+        "dark-1": #2d3439,
+        "dark-2": #42484d,
+        "light-1": #aaa,
+        "light-2": #ececec,
+        "light-3": #d6dee0,
+
+        /* Variations */
+        "50": #f9fafb,
+        "100": #f3f4f6,
+        "200": #e5e7eb,
+        "300": #d1d5db,
+        "400": #9ca3af,
+        "500": #6b7280,
+        "600": #4b5563,
+        "700": #374151 ,
+        "800": #1f2937 ,
+
+
+        /* Blue-Greys */
+        "blue-1": #bcccdc,
+        "blue-2": #829ab0,
+        "blue-3": #617d98,
+        "blue-4": #233c57,
+        "blue-5": #102a42,
+    ),
+    //% ***************    *************** //
+
+    // Tailwind Colors
+    "slate-50": #f8fafc,
+    "slate-100": #f1f5f9,
+    "slate-200": #e2e8f0,
+    "slate-300": #cbd5e1,
+    "slate-400": #94a3b8,
+    "slate-500": #64748b,
+    "slate-600": #475569,
+    "slate-700": #334155,
+    "slate-800": #1e293b,
+    "slate-900": #0f172a,
+
+    "zinc-50": #fafafa,
+    "zinc-100": #f4f4f5,
+    "zinc-200": #e4e4e7,
+    "zinc-300": #d4d4d8,
+    "zinc-400": #a1a1aa,
+    "zinc-500": #71717a,
+    "zinc-600": #52525b,
+    "zinc-700": #3f3f46,
+    "zinc-800": #27272a,
+    "zinc-900": #18181b,
+    
+    "orange-50": #fff7ed,
+    "orange-100": #ffedd5,
+    "orange-200": #fed7aa,
+    "orange-300": #fdba74,
+    "orange-400": #fb923c,
+    "orange-500": #f97316,
+    "orange-600": #ea580c,
+    "orange-700": #c2410c,
+    "orange-800": #9a3412,
+    "orange-900": #7c2d12,
+
+    "yellow-50": #fefce8,
+    "yellow-100": #fef9c3,
+    "yellow-200": #fef08a,
+    "yellow-300": #fde047,
+    "yellow-400": #facc15,
+    "yellow-500": #eab308,
+    "yellow-600": #ca8a04,
+    "yellow-700": #a16207,
+    "yellow-800": #854d0e,
+    "yellow-900": #713f12,
+
+    "lime-50": #f7fee7,
+    "lime-100": #ecfccb,
+    "lime-200": #d9f99d,
+    "lime-300": #bef264,
+    "lime-400": #a3e635,
+    "lime-500": #84cc16,
+    "lime-600": #65a30d,
+    "lime-700": #4d7c0f,
+    "lime-800": #3f6212,
+    "lime-900": #365314,
+
+    "emerald-50": #ecfdf5,
+    "emerald-100": #d1fae5,
+    "emerald-200": #a7f3d0,
+    "emerald-300": #6ee7b7,
+    "emerald-400": #34d399,
+    "emerald-500": #10b981,
+    "emerald-600": #059669,
+    "emerald-700": #047857,
+    "emerald-800": #065f46,
+    "emerald-900": #064e3b,
+
+    "teal-50": #f0fdfa,
+    "teal-100": #ccfbf1,
+    "teal-200": #99f6e4,
+    "teal-300": #5eead4,
+    "teal-400": #2dd4bf,
+    "teal-500": #14b8a6,
+    "teal-600": #0d9488,
+    "teal-700": #0f766e,
+    "teal-800": #115e59,
+    "teal-900": #134e4a,
+
+    "cyan-50": #ecfeff,
+    "cyan-100": #cffafe,
+    "cyan-200": #a5f3fc,
+    "cyan-300": #67e8f9,
+    "cyan-400": #22d3ee,
+    "cyan-500": #06b6d4,
+    "cyan-600": #0891b2,
+    "cyan-700": #0e7490,
+    "cyan-800": #155e75,
+    "cyan-900": #164e63,
+
+    "blue-50": #eff6ff,
+    "blue-100": #dbeafe,
+    "blue-200": #bfdbfe,
+    "blue-300": #93c5fd,
+    "blue-400": #60a5fa,
+    "blue-500": #3b82f6,
+    "blue-600": #2563eb,
+    "blue-700": #1d4ed8,
+    "blue-800": #1e40af,
+    "blue-000": #1e3a8a,
+
+    "indigo-50": #eef2ff,
+    "indigo-100": #e0e7ff,
+    "indigo-200": #c7d2fe,
+    "indigo-300": #a5b4fc,
+    "indigo-400": #818cf8,
+    "indigo-500": #6366f1,
+    "indigo-600": #4f46e5,
+    "indigo-700": #4338ca,
+    "indigo-800": #3730a3,
+    "indigo-900": #312e81,
+
+    "purple-50": #faf5ff,
+    "purple-100": #f3e8ff,
+    "purple-200": #e9d5ff,
+    "purple-300": #d8b4fe,
+    "purple-400": #c084fc,
+    "purple-500": #a855f7,
+    "purple-600": #9333ea,
+    "purple-700": #7e22ce,
+    "purple-800": #6b21a8,
+    "purple-900": #581c87,
+
+    "rose-50": #fff1f2,
+    "rose-100": #ffe4e6,
+    "rose-200": #fecdd3,
+    "rose-300": #fda4af,
+    "rose-400": #fb7185,
+    "rose-500": #f43f5e,
+    "rose-600": #e11d48,
+    "rose-700": #be123c,
+    "rose-800": #9f1239,
+    "rose-900": #881337,
+
+
+    //@ ***************************** Project Colors *****************************//
+    //# ******** Primary ******** //
+    primary: ( 
+
+    "base": hsl(36, 100%, 64%),
+
+    // Light Shades
+    "50": hsl(36, 35%, 94%),
+    "100": hsl(36, 38%, 82%),
+    "150": hsl(36, 37%, 63%),
+    "200": hsl(36, 58%, 56%),
+    "300": hsl(36, 58%, 48%),
+    "400": hsl(36, 45%, 45%),
+
+    // Dark Shades
+    "600": hsl(36, 58%, 35%),
+    "700": hsl(36, 58%, 23%),
+    "800": hsl(36, 59%, 20%),
+    "900": hsl(36, 58%, 16%), 
+    ),
+
+
+    //# ******** Secondary  ******** //
+    secondary: ( 
+
+    "base": hsl(152, 100%, 38%),
+
+    // Light Shades
+    "50": hsl(152, 35%, 94%),
+    "1520": hsl(152, 38%, 82%),
+    "150": hsl(152, 37%, 63%),
+    "200": hsl(152, 58%, 56%),
+    "300": hsl(152, 58%, 48%),
+    "400": hsl(152, 45%, 45%),
+
+    // Dark Shades
+    "600": hsl(153, 58%, 35%),
+    "700": hsl(152, 58%, 23%),
+    "800": hsl(152, 59%, 20%),
+    "900": hsl(152, 58%, 16%),
+    ),
+
+    //@ *****************************   ***************************** //
+);
+
+
+// Get Color Function
+@function color($key, $map: $colors) {
+  $keys: str-explode($key, '.');
+  @return deep-map-get($map, $keys...);
+}
+//& **********************************  End Of Colors  ********************************** //
+
+
+
+//& **********************************  Fonts  ********************************** //
+//% ***************  Font-Size  *************** //
+$font-sizes: ( 
+
+  // Text
+  "sm-1": clamp(1.2rem, 1.1rem + 0.3vw, 1.6rem),
+  "sm-2": clamp(1.45rem, 1.2rem + 0.3vw, 1.8rem),
+  "sm-3": clamp(1.6rem, 1.3rem + 0.4vw, 2rem),
+  "rg": clamp(1.8rem, 1.5rem + 0.5vw, 2.2rem),
+  "lg-1": clamp(2rem, 1.7rem + 0.6vw, 2.5rem),
+  "lg-2": clamp(2.3rem, 2rem + 0.7vw, 2.7rem),
+  "lg-3": clamp(2.5rem, 2.2rem + 1vw, 3rem),
+  "lg-4": clamp(2.8rem, 2.3rem + 1.3vw, 3.4rem),
+
+  // Headings
+  "head-1": 6rem,
+  "head-2": 4.7rem,
+  "head-3": 4rem,
+  "head-4": 3.5rem,
+
+  "head-xl": 9rem,
+  "head-xxl": 12rem,
+);
+
+
+@function fs($font-size) {
+    @return map-get($font-sizes, $font-size);
+}
+//% ***************    *************** //
+
+
+//% ***************  Font-Weight  *************** //
+$font-weights: ( 
+  "thin": 100,
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "black": 900
+);
+
+
+@function fw($font-weight-style) {
+    @return map-get($font-weights, $font-weight-style);
+}
+//% ***************    *************** //
+
+
+//% ***************  Font-Family  *************** //
+$ff-primary: "Lato",
+sans-serif;
+$ff-secondary: Arial,
+Helvetica,
+sans-serif;
+//% ***************    *************** //
+//& **********************************  End Of Fonts  ********************************** //
+
+
+
+//& **********************************  Shadows  ********************************** //
+$shadows: ( 
+
+  // Small
+  sm-1: 0 0.2rem 0.5rem rgba(color('black'), 0.05),
+  sm-2: 0 0.3rem 0.8rem rgba(color('black'), 0.05),
+  sm-3: 0 0.6rem 1.2rem rgba(color('black'), 0.05),
+
+  // Regular 
+  rg-1: 0 0.2rem 0.5rem  rgba(color('black'), 0.08),
+  rg-2: 0 0.3rem 0.8rem rgba(color('black'), 0.08),
+  rg-3: 0 0.6rem 1.2rem rgba(color('black'), 0.08),
+
+  // Large
+  lg-1: 0 0.4rem 0.8rem rgba(color('black'), 0.12),
+  lg-2: 0 0.8rem 1.6rem rgba(color('black'), 0.1),
+  lg-3: 0 1.3rem 3rem rgba(color('black'), 0.1)
+);
+
+
+@function shadow($shadow) {
+    @return map-get($shadows, $shadow);
+}
+//& **********************************  End Of Shadows  ********************************** //
+
+
+
+//& **********************************  Other  ********************************** //
+$baseLetterSpacing: 0.5px;
+$baseRadius: 3px;
+$baseGutter: 0.25rem;
+$lineHeightText: 1.5;
+$lineHeightTitle: 1.1;
+$max-width: 1170px;
+$paraMaxWidth: 45em;
+$transition: all 0.3s ease-in-out;
+//& **********************************  End Of Other  ********************************** //

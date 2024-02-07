@@ -1,0 +1,144 @@
+<!doctype html>
+<html
+  lang="en"
+  data-theme="light"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="icon.png"
+    />
+
+    <!-- Font-awesome -->
+    <script
+      src="https://kit.fontawesome.com/a9c97bd30a.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;500;600;700;800&family=Indie+Flower&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Leaflet -->
+
+    <!-- Js -->
+    <script
+      src="./src/js/main.js"
+      type="module"
+      defer
+    ></script>
+
+    <title></title>
+  </head>
+
+  <body>
+    <!--* ***************************************  Sidebar  *************************************** -->
+    <div class="sidebar">
+      <!-- Logo -->
+      <img
+        src="./src/assets/img/logo.png"
+        alt="Logo"
+        class="logo"
+      />
+
+      <!-- Workouts -->
+      <ul class="workouts">
+        <p
+          class="starting-hint"
+          id="starting-hint"
+        >
+          <i class="fa-solid fa-location-dot"></i>
+          <span class="ml-2">Click anywhere on the map to add a new workout</span>
+        </p>
+
+        <form class="form hidden">
+          <div class="form__header">
+            <i class="fas fa-times form__close-icon"></i>
+          </div>
+          <div class="form__row">
+            <label class="form__label">Type</label>
+            <select class="form__input form__input--type">
+              <option value="running">Running</option>
+              <option value="cycling">Cycling</option>
+            </select>
+          </div>
+          <div class="form__row">
+            <label class="form__label">Distance</label>
+            <input
+              class="form__input form__input--distance"
+              placeholder="km"
+            />
+          </div>
+          <div class="form__row">
+            <label class="form__label">Duration</label>
+            <input
+              class="form__input form__input--duration"
+              placeholder="min"
+            />
+          </div>
+          <div class="form__row">
+            <label class="form__label">Cadence</label>
+            <input
+              class="form__input form__input--cadence"
+              placeholder="step/min"
+            />
+          </div>
+          <div class="form__row form__row--hidden">
+            <label class="form__label">Elev Gain</label>
+            <input
+              class="form__input form__input--elevation"
+              placeholder="meters"
+            />
+          </div>
+          <button class="form__btn">Add</button>
+        </form>
+      </ul>
+
+      <p
+        id="clear"
+        class="clear-workouts mt-4"
+      >
+        <i class="fa-regular fa-circle-xmark"></i>
+        <span>Clear All Workouts</span>
+      </p>
+    </div>
+    <!--* ***************************************  End Of Sidebar  *************************************** -->
+
+    <!--* ***************************************   Map  *************************************** -->
+    <div id="map"></div>
+    <!--* ***************************************  End Of Map  *************************************** -->
+  </body>
+</html>
+
+<!-- ------------------------------------------------- Comments -------------------------------------------------- -->
+
+<!--* ***************************************   Comment  *************************************** -->
+<!--* ***************************************  End Of Comment  *************************************** -->
+
+<!-- & ********************************  Comment  ********************************  -->
+<!-- & ********************************  End Of Comment  ********************************  -->
+
+<!-- $ *******************  Comment  ******************* $ -->
+<!-- $ *******************  End Of Comment  ******************* $ -->
+
+<!-- % ***************  Comment  ***************  -->
+<!-- % ***************  End Of Comment  ***************  -->
+
+<!-- @ ************  Comment  ************  -->
+<!-- @ ************  End Of Comment  ************  -->
+
+<!-- # ********  Comment  ********  -->
+<!-- # ********  End Of Comment  ********  -->
+
+<!-- ^ *****  Comment  *****  -->
+<!-- ^ *****  End Of Comment  *****  -->

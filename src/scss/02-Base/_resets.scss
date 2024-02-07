@@ -1,0 +1,34 @@
+@use '../01-Abstracts'as *;
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%; //1rem = 10px //
+
+  //# ---- Media ---- //
+
+  @include respond (xxl) {
+      font-size: 70%; // 1rem ~= 11px //
+  }
+
+  @include respond (lg) {
+      font-size: 57%; // 1rem ~= 9px //
+  }
+
+  @include respond (md) {
+      font-size: 52%; // 1rem ~= 8px //
+  }
+
+  // @include respond (sm) {
+  //     font-size: 43.75%; // 1rem = 7px //
+  // }
+
+  //# ---- ---- //
+}
+
+*,
+*::after,
+*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: inherit;
+}

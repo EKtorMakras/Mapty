@@ -1,0 +1,46 @@
+@use '../01-Abstracts'as *;
+
+
+body {
+  overflow-x: hidden;
+  background-color: getColor(bg);
+  transition: all .3s ease-in-out;
+  overscroll-behavior-y: none;
+  padding: 2rem;
+  display: flex;
+}
+
+
+ul {
+  list-style-type: none;
+}
+
+
+a {
+  display: inline-block;
+  text-decoration: none;
+  transition: $transition;
+  color: getColor(secondary);
+}
+
+
+img,picture,svg,video {
+  max-width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+
+input,textarea,select,button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+}
+
+
+button,
+input[type="submit"] {
+  cursor: pointer;
+  transition: $transition;
+}

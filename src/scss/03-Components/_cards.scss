@@ -1,0 +1,10 @@
+@use '../01-Abstracts'as *;
+
+.card {
+  @include card();
+  @include flex(column,start,center,2rem);
+
+  &-title {
+    margin-bottom: 1.5rem;
+  }
+}

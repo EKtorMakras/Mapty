@@ -1,0 +1,56 @@
+@use '../01-Abstracts'as *;
+
+
+body {
+  font-family: $ff-primary;
+  font-size: fs(rg);
+  font-weight: fw(regular);
+  line-height: $lineHeightText;
+  color: getColor(text);
+}
+
+
+p {
+  font-size: fs(rg);
+  color: getColor(text);
+  max-width: $paraMaxWidth;
+  letter-spacing: var(--letterSpacing-2);
+}
+
+
+//^ --- Headings --- //
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: var(--letterSpacing-5);
+  text-transform: capitalize;
+  line-height: $lineHeightTitle;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  color: getColor(title);
+}
+
+
+h1 {
+  font-size: fs(head-1);
+  font-weight: fw(thin);
+}
+
+
+h2 {
+  font-size: fs(head-2);
+  font-weight: fw(light);
+}
+
+
+h3 {
+  font-size: fs(head-3);
+  font-weight: fw(light);
+}
+
+h4 {
+  font-size: fs(head-4);
+  font-weight: fw(light);
+}
+//^ ---  --- //
