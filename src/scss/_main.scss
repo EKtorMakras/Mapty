@@ -1,6 +1,7 @@
-@use "01-Abstracts/"as *;
+@use "01-Abstracts/" as *;
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -17,7 +18,6 @@ html, body {
   align-self: center;
   margin-bottom: 4rem;
 }
-
 
 //@ ************  Workouts  ************ //
 .workouts {
@@ -62,7 +62,6 @@ html, body {
     font-size: 1.7rem;
     font-weight: 600;
   }
-
 
   &__actions {
     @include flex($gap: 12px);
@@ -113,10 +112,8 @@ html, body {
     text-transform: uppercase;
     font-weight: 800;
   }
-  
 }
 //@ ************  End Of Workouts  ************ //
-
 
 //@ ************  Form  ************ //
 .form {
@@ -133,7 +130,9 @@ html, body {
 
   /* Match height and activity boxes */
   // height: 9.25rem;
-  transition: all 0.5s, transform 1ms;
+  transition:
+    all 0.5s,
+    transform 1ms;
 
   &.hidden {
     transform: translateY(-30rem);
@@ -181,7 +180,7 @@ html, body {
     }
   }
 
-   &__close-icon {
+  &__close-icon {
     font-size: 1.7rem;
     position: absolute;
     right: 10px;
@@ -192,13 +191,13 @@ html, body {
     &:hover {
       color: getColor(zinc-300);
     }
-   }
+  }
 
   &__btn {
-    @include btn($bgColor: color('secondary.600'));
+    @include btn($bgColor: color("secondary.600"));
     width: 60%;
     margin-top: 1rem;
-    padding: .7rem 1rem !important;
+    padding: 0.7rem 1rem !important;
     letter-spacing: 2px;
   }
 }
@@ -206,16 +205,16 @@ html, body {
 
 // Twitter Link
 .twitter-link {
- &:link,
- &:visited {
-   color: getColor(gray-light-1);
-   transition: all 0.2s;
- }
+  &:link,
+  &:visited {
+    color: getColor(gray-light-1);
+    transition: all 0.2s;
+  }
 
- &:hover,
- &:active {
-   color: getColor(gray-light-2);
- }
+  &:hover,
+  &:active {
+    color: getColor(gray-light-2);
+  }
 }
 
 // Copyright
@@ -233,8 +232,95 @@ html, body {
   font-size: 2rem;
   width: 100%;
 
-  i{
+  i {
     color: getColor(primary-base);
+  }
+}
+
+// Sort
+.sort {
+  &__wrapper {
+    margin-bottom: 3rem;
+  }
+
+  &__option-group {
+    @include flex(row, flex-end, center, 1rem);
+    margin-bottom: 2rem;
+  }
+
+  &__input {
+    flex-basis: 30%;
+  }
+
+  &__label {
+    font-size: fs(sm-2);
+    color: getColor(zinc-300);
+  }
+
+  &__radio-group {
+    @include flex(row, end, center, 1.5rem);
+    margin: 1rem 0;
+
+    .sort__radio-label {
+      $circleSize: 16px;
+      display: block;
+      position: relative;
+      padding-left: 25px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      user-select: none;
+      color: getColor(zinc-300);
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: $circleSize;
+        width: $circleSize;
+        border: 2px solid getColor(primary-base);
+        border-radius: 50%;
+        background-color: transparent;
+        transition: background-color 0.2s ease;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        transform: translateY(-50%) scale(0);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: getColor(primary-base);
+        transition: transform 0.2s ease;
+      }
+    }
+
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+
+      &:checked + .sort__radio-label {
+        &::before {
+          background-color: getColor(primary-base);
+          border-color: getColor(primary-base);
+        }
+
+        &::after {
+          transform: translateY(-50%) scale(1);
+        }
+      }
+
+      &:focus + .sort__radio-label {
+        &::before {
+          box-shadow: 0 0 0 3px rgba(getColor(primary-base), 0.3);
+        }
+      }
+    }
   }
 }
 
@@ -250,72 +336,64 @@ html, body {
   }
 }
 
-
 //@ ************  Map  ************ //
 #map {
- flex: 1;
- height: 100%;
- background-color: getColor(gray-light-1);
+  flex: 1;
+  height: 100%;
+  background-color: getColor(gray-light-1);
 }
 
 /* Popup width is defined in JS using options */
 .leaflet-popup {
- .leaflet-popup-content-wrapper {
-   background-color: getColor(gray-dark-1);
-   color: getColor(gray-light-2);
-   border-radius: 5px;
-   padding-right: 0.6rem;
- }
+  .leaflet-popup-content-wrapper {
+    background-color: getColor(gray-dark-1);
+    color: getColor(gray-light-2);
+    border-radius: 5px;
+    padding-right: 0.6rem;
+  }
 
- .leaflet-popup-content {
-   font-size: 1.5rem;
- }
+  .leaflet-popup-content {
+    font-size: 1.2rem;
+    letter-spacing: 1.2px;
+  }
 
- .leaflet-popup-tip {
-   background-color: getColor(gray-dark-1);
- }
+  .leaflet-popup-tip {
+    background-color: getColor(gray-dark-1);
+  }
 }
 
 .running-popup {
- .leaflet-popup-content-wrapper {
-   border-left: 5px solid getColor(secondary-base);
- }
+  .leaflet-popup-content-wrapper {
+    border-left: 5px solid getColor(secondary-base);
+  }
 }
 
 .cycling-popup {
- .leaflet-popup-content-wrapper {
-   border-left: 5px solid getColor(primary-base);
- }
+  .leaflet-popup-content-wrapper {
+    border-left: 5px solid getColor(primary-base);
+  }
 }
 //@ ************  End Of Map  ************ //
-
-
 
 // -------------------------------------------- Comments --------------------------------------------------- //
 
 //* ***************************************   Comment  *************************************** //
 //* ***************************************  End Of Comment  *************************************** //
 
-
 //& ********************************  Comment  ******************************** //
 //& ********************************  End Of Comment  ******************************** //
-
 
 //$ *******************  Comment  ******************* $//
 //$ *******************  End Of Comment  ******************* $//
 
-
 //% ***************  Comment  *************** //
 //% ***************  End Of Comment  *************** //
-
 
 //@ ************  Comment  ************ //
 //@ ************  End Of Comment  ************ //
 
-
 //# ********  Comment  ******** //
 //# ********  End Of Comment  ******** //
-
 
 //^ *****  Comment  ***** //
 //^ *****  End Of Comment  ***** //
