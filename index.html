@@ -51,6 +51,52 @@
         class="logo"
       />
 
+      <div class="sort__wrapper">
+        <div class="sort__option-group">
+          <label
+            for="sort__input"
+            class="sort__label"
+          >
+            Sort By
+          </label>
+          <select
+            class="form__input sort__input"
+            id="sort__select-input"
+          >
+            <option value="date">Date</option>
+            <option value="distance">Distance</option>
+            <option value="duration">Duration</option>
+          </select>
+        </div>
+
+        <div class="sort__radio-group">
+          <input
+            type="radio"
+            id="sort__asc"
+            name="sortOrder"
+            value="asc"
+            checked
+          />
+          <label
+            for="sort__asc"
+            class="sort__radio-label"
+            >Ascending</label
+          >
+
+          <input
+            type="radio"
+            id="sort__desc"
+            name="sortOrder"
+            value="desc"
+          />
+          <label
+            for="sort__desc"
+            class="sort__radio-label"
+            >Descending</label
+          >
+        </div>
+      </div>
+
       <!-- Workouts -->
       <ul class="workouts">
         <p

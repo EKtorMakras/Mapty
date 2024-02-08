@@ -15,6 +15,10 @@ class App {
   #workouts = [];
   #editFlag = false;
   #editingWorkoutId;
+  #sort = {
+    value: dom.sortSelectInput.value,
+    order: getDomElement("input[type='radio']:checked", false, dom.sortRadioGroup).value,
+  };
 
   constructor() {
     // Set Page title form .env
@@ -31,12 +35,17 @@ class App {
 
     // Check State
     this._checkState();
+
+    // Sort Workouts
+    this._sortWorkouts();
   }
 
   _loadEvents() {
     dom.form.addEventListener("submit", this._formSubmitted.bind(this));
     dom.formCloseIcon.addEventListener("click", this._hideForm.bind(this));
     dom.inputType.addEventListener("change", this._toggleElevationField);
+    dom.sortSelectInput.addEventListener("change", this._sortPropertyChange.bind(this));
+    dom.sortRadioGroup.addEventListener("change", this._sortOrderChange.bind(this));
     dom.containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
     dom.containerWorkouts.addEventListener("click", this._editWorkout.bind(this));
     dom.containerWorkouts.addEventListener("click", this._deleteWorkout.bind(this));
@@ -316,14 +325,14 @@ class App {
       icon: L.icon({
         iconUrl: workoutMarkerIcon,
         iconSize: [32, 35],
-        popupAnchor: [0, -20],
+        popupAnchor: [0, -15],
       }),
     })
       .addTo(this.#map)
       .bindPopup(
         L.popup({
-          maxWidth: 300,
-          minWidth: 100,
+          maxWidth: 200,
+          minWidth: 120,
           autoClose: false,
           closeOnClick: false,
           className: `${workout.type}-popup`,
@@ -347,12 +356,12 @@ class App {
           </span>
         </div>
       </div>
-      <div class="workout__details">
+      <div class="workout__details" title="Distance">
         <span class="workout__icon">${workout.emoji}</span>
         <span class="workout__value">${workout.distance}</span>
         <span class="workout__unit">km</span>
       </div>
-      <div class="workout__details">
+      <div class="workout__details" title="Duration">
         <span class="workout__icon">⏱</span>
         <span class="workout__value">${workout.duration}</span>
         <span class="workout__unit">min</span>
@@ -361,12 +370,12 @@ class App {
 
     if (workout.type === "running") {
       html += `
-        <div class="workout__details">
+        <div class="workout__details" title="Pace">
           <span class="workout__icon">⚡️</span>
           <span class="workout__value">${workout.pace.toFixed(1)}</span>
           <span class="workout__unit">min/km</span>
         </div>
-        <div class="workout__details">
+        <div class="workout__details" title="Cadence">
           <span class="workout__icon">🦶🏼</span>
           <span class="workout__value">${workout.cadence}</span>
           <span class="workout__unit">spm</span>
@@ -377,12 +386,12 @@ class App {
 
     if (workout.type === "cycling") {
       html += `
-        <div class="workout__details">
+        <div class="workout__details" title="Speed">
           <span class="workout__icon">⚡️</span>
           <span class="workout__value">${workout.speed.toFixed(1)}</span>
           <span class="workout__unit">km/h</span>
         </div>
-        <div class="workout__details">
+        <div class="workout__details" title="Elevation Gain">
           <span class="workout__icon">⛰</span>
           <span class="workout__value">${workout.elevationGain}</span>
           <span class="workout__unit">m</span>
@@ -428,14 +437,58 @@ class App {
     if (this.#workouts.length === 0) {
       dom.startingHint.classList.remove("hidden");
       dom.clear.classList.add("hidden");
+      dom.sortWrapper.classList.add("hidden");
     } else {
       dom.startingHint.classList.add("hidden");
       dom.clear.classList.remove("hidden");
+      dom.sortWrapper.classList.remove("hidden");
     }
   }
 
+  // Sorting
+  _sortPropertyChange(evt) {
+    this.#sort.value = evt.target.value;
+    this._sortWorkouts();
+  }
+
+  _sortOrderChange(evt) {
+    if (evt.target.matches("input[type='radio']")) {
+      this.#sort.order = evt.target.value;
+    }
+    this._sortWorkouts();
+  }
+
+  _sortWorkouts() {
+    const { value: sortBy, order } = this.#sort;
+
+    this.#workouts.sort((a, b) => {
+      // Convert the date strings to Date objects for comparison
+      if (sortBy === "date") {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return order === "asc" ? dateA - dateB : dateB - dateA;
+      }
+
+      // For numeric properties, compare them directly
+      if (sortBy === "distance" || sortBy === "duration") {
+        return order === "asc" ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy];
+      }
+
+      // For string properties, compare them alphabetically
+      if (sortBy === "description") {
+        return order === "asc" ? a[sortBy].localeCompare(b[sortBy]) : b[sortBy].localeCompare(a[sortBy]);
+      }
+
+      // Default case, no sorting
+      return 0;
+    });
+
+    // Display Wokouts
+    this._displayWorkouts();
+  }
+
   // Locale Storage
-  _setLocaleStorage(workout) {
+  _setLocaleStorage() {
     localStorage.setItem("workouts", JSON.stringify(this.#workouts));
   }
 
@@ -530,7 +583,7 @@ class Cycling extends Workout {
 
   calcSpeed() {
     //km/h
-    this.speed = this.distance / (this.duration * 60);
+    this.speed = this.distance / (this.duration / 60);
     return this.speed;
   }
 }
