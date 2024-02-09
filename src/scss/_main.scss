@@ -336,6 +336,89 @@ body {
   }
 }
 
+//@ ************  Confirmation Dialog  ************ //
+.confirmation-dialog {
+  @include flex();
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); // Semi-transparent background
+  z-index: 1000; // Ensure it's above other content
+  transition:
+    visibility 0.3s,
+    opacity 0.3s;
+
+  &__content {
+    background-color: getColor(gray-light-1);
+    border-radius: 10px;
+    padding: 1rem 2rem 2.5rem;
+    width: 500px; // Adjust as needed
+    max-width: 90%; // Ensure it's not too wide on large screens
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  &__close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: getColor(zinc-200);
+    @include focus-state(getColor(zinc-200));
+
+    &:hover {
+      color: getColor(zinc-50);
+    }
+  }
+
+  &__title {
+    margin-bottom: 1rem;
+    font-size: 2.2rem;
+    padding-block: 1rem;
+    font-weight: bold;
+  }
+
+  &__message {
+    margin-bottom: 2.3rem;
+    font-size: 1.7rem;
+  }
+
+  &__actions {
+    @include flex(row, flex-end, $gap: 1.5rem);
+    margin-top: 1rem;
+  }
+
+  &__btn {
+    padding: 0.7rem 2rem;
+    font-size: 1.3rem;
+    letter-spacing: 1.2px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &--cancel {
+      background-color: getColor(gray-light-2);
+      color: getColor(gray-dark-1);
+      &:hover {
+        background-color: getColor(gray-light-3);
+      }
+    }
+
+    &--delete {
+      background-color: getColor(rose-400);
+      color: getColor(white);
+      &:hover {
+        background-color: getColor(rose-500);
+      }
+    }
+  }
+}
+
 //@ ************  Map  ************ //
 #map {
   flex: 1;

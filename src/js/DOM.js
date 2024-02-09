@@ -19,6 +19,12 @@ export const dom = {
   inputCadence: getDomElement(".form__input--cadence"),
   inputElevation: getDomElement(".form__input--elevation"),
 
+  confirmationDialog: getDomElement("#confirmation-dialog"),
+  confirmationDialogMessage: getDomElement(".confirmation-dialog__message"),
+  confirmationDialogClose: getDomElement("#confirmation-dialog-close"),
+  confirmationDialogCancel: getDomElement(".confirmation-dialog__btn--cancel"),
+  confirmationDialogDelete: getDomElement(".confirmation-dialog__btn--delete"),
+
   startingHint: getDomElement("#starting-hint"),
   clear: getDomElement("#clear"),
 };
