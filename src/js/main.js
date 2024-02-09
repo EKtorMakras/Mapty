@@ -19,6 +19,7 @@ class App {
     value: dom.sortSelectInput.value,
     order: getDomElement("input[type='radio']:checked", false, dom.sortRadioGroup).value,
   };
+  #deleteCb;
 
   constructor() {
     // Set Page title form .env
@@ -44,12 +45,21 @@ class App {
     dom.form.addEventListener("submit", this._formSubmitted.bind(this));
     dom.formCloseIcon.addEventListener("click", this._hideForm.bind(this));
     dom.inputType.addEventListener("change", this._toggleElevationField);
+
     dom.sortSelectInput.addEventListener("change", this._sortPropertyChange.bind(this));
     dom.sortRadioGroup.addEventListener("change", this._sortOrderChange.bind(this));
+
     dom.containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
     dom.containerWorkouts.addEventListener("click", this._editWorkout.bind(this));
     dom.containerWorkouts.addEventListener("click", this._deleteWorkout.bind(this));
-    dom.clear.addEventListener("click", this._clearAllWorkouts.bind(this));
+
+    dom.confirmationDialogClose.addEventListener("click", this._hideDialog);
+    dom.confirmationDialogCancel.addEventListener("click", this._hideDialog);
+    dom.confirmationDialog.addEventListener("click", this._dialogOverlayClicked.bind(this));
+    dom.confirmationDialogDelete.addEventListener("click", this._dialogDeleteClicked.bind(this));
+
+    dom.clear.addEventListener("click", this._clearAllWorkoutsClicked.bind(this));
+    window.addEventListener("keydown", this._escapePressed.bind(this));
   }
 
   // Geolocation
@@ -93,7 +103,15 @@ class App {
   }
 
   _refreshMap() {
+    // Save the current map center coordinates
+    const currentCenter = this.#map.getCenter();
+
+    // Remove the map
     this.#map.remove();
+
+    // Load the map with the saved center coordinates
+    // this._loadMap({ coords: { latitude: currentCenter.lat, longitude: currentCenter.lng } });
+
     this._loadMap();
   }
 
@@ -131,8 +149,12 @@ class App {
 
       if (workoutToEdit.type === "running") {
         dom.inputCadence.value = workoutToEdit.cadence;
+        dom.inputElevation.closest(".form__row").classList.add("form__row--hidden");
+        dom.inputCadence.closest(".form__row").classList.remove("form__row--hidden");
       } else if (workoutToEdit.type === "cycling") {
         dom.inputElevation.value = workoutToEdit.elevationGain;
+        dom.inputElevation.closest(".form__row").classList.remove("form__row--hidden");
+        dom.inputCadence.closest(".form__row").classList.add("form__row--hidden");
       }
 
       dom.formBtn.textContent = "Save";
@@ -222,8 +244,8 @@ class App {
     // Render workout on the map as marker
     this._renderWorkoutMarker(workout);
 
-    // Render workout list
-    this._renderWorkout(workout);
+    // Update UI
+    this._sortWorkouts();
 
     // Clear Inputs
     this._clearForm();
@@ -292,17 +314,23 @@ class App {
     const workoutEl = deleteActionEl.closest(".workout");
     const selectedId = workoutEl.dataset.id;
 
-    if (confirm("Are you sure you want to delete this workout")) {
-      this.#workouts = this.#workouts.filter((workout) => workout.id !== selectedId);
+    const msg = "Are you sure you want to delete this workout?";
+    const btnText = "Delete";
+    const cb = () => this._deleteWorkoutConfirm(selectedId);
 
-      if (this.#editingWorkoutId === selectedId) {
-        this._clearForm();
-        this._hideForm();
-      }
+    this._showDialog(msg, btnText, cb);
+  }
 
-      this._refreshState();
-      this._setLocaleStorage();
+  _deleteWorkoutConfirm(id) {
+    this.#workouts = this.#workouts.filter((workout) => workout.id !== id);
+
+    if (this.#editingWorkoutId === id) {
+      this._clearForm();
+      this._hideForm();
     }
+
+    this._refreshState();
+    this._setLocaleStorage();
   }
 
   _editWorkout(evt) {
@@ -466,24 +494,24 @@ class App {
       if (sortBy === "date") {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
-        return order === "asc" ? dateA - dateB : dateB - dateA;
+        return order === "asc" ? dateB - dateA : dateA - dateB; // Reversed logic
       }
 
       // For numeric properties, compare them directly
       if (sortBy === "distance" || sortBy === "duration") {
-        return order === "asc" ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy];
+        return order === "asc" ? b[sortBy] - a[sortBy] : a[sortBy] - b[sortBy]; // Reversed logic
       }
 
       // For string properties, compare them alphabetically
       if (sortBy === "description") {
-        return order === "asc" ? a[sortBy].localeCompare(b[sortBy]) : b[sortBy].localeCompare(a[sortBy]);
+        return order === "asc" ? b[sortBy].localeCompare(a[sortBy]) : a[sortBy].localeCompare(b[sortBy]); // Reversed logic
       }
 
       // Default case, no sorting
       return 0;
     });
 
-    // Display Wokouts
+    // Display Workouts
     this._displayWorkouts();
   }
 
@@ -498,7 +526,7 @@ class App {
     if (!data) return;
 
     this.#workouts = data;
-    this._displayWorkouts();
+    this._sortWorkouts();
   }
 
   _removeLocalStorage() {
@@ -506,19 +534,67 @@ class App {
   }
 
   // Clear
-  _clearAllWorkouts() {
-    if (confirm("Are you sure you want to delete all your workouts?")) {
-      this.#workouts = [];
-      this._removeLocalStorage();
-      this._refreshState();
+  _clearAllWorkoutsClicked() {
+    const msg = "Are you sure you want to delete all workouts? This action cannot be undone.";
+    const btnText = "Clear";
+    const cb = () => {
+      this._clearWorkoutsConfirmed();
+    };
+
+    this._showDialog(msg, btnText, cb);
+  }
+
+  _clearWorkoutsConfirmed() {
+    this.#workouts = [];
+    this._removeLocalStorage();
+    this._refreshState();
+  }
+
+  // Dialog
+  _showDialog(msg, btnText, cb) {
+    dom.confirmationDialogMessage.textContent = msg;
+    dom.confirmationDialogDelete.textContent = btnText;
+    dom.confirmationDialog.classList.remove("hidden");
+    this.#deleteCb = cb;
+  }
+
+  _hideDialog() {
+    dom.confirmationDialog.classList.add("hidden");
+  }
+
+  _dialogOverlayClicked(evt) {
+    const clickedOnContent = !!evt.target.closest(".confirmation-dialog__content");
+    if (clickedOnContent) return;
+
+    this._hideDialog();
+  }
+
+  _dialogDeleteClicked() {
+    if (typeof this.#deleteCb === "function") {
+      this.#deleteCb();
+      this._hideDialog();
     }
   }
 
   // Other
   _refreshState() {
-    this._displayWorkouts();
+    this._sortWorkouts();
     this._checkState();
     this._refreshMap();
+  }
+
+  _escapePressed(evt) {
+    if (evt.key !== "Escape") return;
+
+    if (!dom.confirmationDialog.classList.contains("hidden")) {
+      this._hideDialog();
+      return;
+    }
+
+    if (!dom.form.classList.contains("hidden")) {
+      this._hideForm();
+      return;
+    }
   }
 
   _validateInputs(...inputs) {
