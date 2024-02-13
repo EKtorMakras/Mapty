@@ -1,0 +1,87 @@
+@use "../01-Abstracts" as *;
+
+.form {
+  background-color: getColor(gray-dark-2);
+  border-radius: 5px;
+  padding: 1.5rem 2.75rem;
+  margin-bottom: 1.75rem;
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 20px repeat(3, 1fr);
+  gap: 0.5rem 2.5rem;
+
+  /* Match height and activity boxes */
+  // height: 9.25rem;
+  transition:
+    all 0.5s,
+    transform 1ms;
+
+  &.hidden {
+    transform: translateY(-30rem);
+    height: 0;
+    padding: 0 2.25rem;
+    margin-bottom: 0;
+    opacity: 0;
+  }
+
+  &__header {
+    grid-column: 1/-1;
+    @include flex($justify: end);
+    margin-top: -10px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+
+    &--hidden {
+      display: none;
+    }
+  }
+
+  &__label {
+    flex: 0 0 50%;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.3rem 1.1rem;
+    font-family: inherit;
+    font-size: 1.4rem;
+    border: none;
+    border-radius: 3px;
+    background-color: getColor(gray-light-3);
+    color: getColor(slate-600);
+    transition: all 0.2s;
+
+    &:focus {
+      outline: none;
+      background-color: #fff;
+    }
+  }
+
+  &__close-icon {
+    font-size: 1.7rem;
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    transition: $transition;
+    color: getColor(zinc-400);
+
+    &:hover {
+      color: getColor(zinc-300);
+    }
+  }
+
+  &__btn {
+    @include btn($bgColor: color("secondary.600"));
+    width: 60%;
+    margin-top: 1rem;
+    padding: 0.7rem 1rem !important;
+    letter-spacing: 2px;
+  }
+}
