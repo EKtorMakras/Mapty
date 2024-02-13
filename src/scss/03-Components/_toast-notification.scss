@@ -1,0 +1,38 @@
+@use "../01-Abstracts" as *;
+
+.toast-notification {
+  $offset: 40px;
+  $transition: 0.5s ease-in-out;
+
+  position: fixed;
+  bottom: $offset;
+  right: $offset;
+  color: white;
+  background-color: getColor(zinc-500);
+  padding: 0.6rem 1.2rem;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  border-radius: var(--radius-2);
+  transform: translateX(calc(100vw + 100%));
+  opacity: 0;
+  z-index: 1000;
+  transition:
+    transform 1s ease-in-out,
+    opacity $transition;
+
+  &.danger {
+    background-color: getColor(rose-600);
+  }
+
+  &.success {
+    background-color: getColor(emerald-500);
+  }
+
+  &.shown {
+    transform: translateX(0);
+    opacity: 1;
+    transition:
+      transform $transition,
+      opacity $transition;
+  }
+}

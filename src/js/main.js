@@ -20,6 +20,7 @@ class App {
     order: getDomElement("input[type='radio']:checked", false, dom.sortRadioGroup).value,
   };
   #deleteCb;
+  #toastNotificationTimeout;
 
   constructor() {
     // Set Page title form .env
@@ -256,6 +257,9 @@ class App {
     // Set to locale storage
     this._setLocaleStorage();
 
+    // Display toast notification
+    this._displayToastNotification("success", "Workout added successfully");
+
     // Check State
     this._checkState();
   }
@@ -303,6 +307,9 @@ class App {
     this._clearForm();
     this._hideForm();
 
+    // Show toast notification
+    this._displayToastNotification("success", "Workout saved successfully");
+
     // Reset the editFlag
     this.#editFlag = false;
   }
@@ -331,6 +338,7 @@ class App {
 
     this._refreshState();
     this._setLocaleStorage();
+    this._displayToastNotification("danger", "Workout deleted successfully");
   }
 
   _editWorkout(evt) {
@@ -515,6 +523,29 @@ class App {
     this._displayWorkouts();
   }
 
+  // Toast Notification
+  _showToastNotification() {
+    dom.toastNotification.classList.add("shown");
+  }
+
+  _hideToastNotification() {
+    dom.toastNotification.classList.remove("shown");
+  }
+
+  _displayToastNotification(category, msg) {
+    const baseClass = "toast-notification";
+    clearTimeout(this.#toastNotificationTimeout);
+
+    dom.toastNotification.textContent = msg;
+    dom.toastNotification.className = `${baseClass} ${category}`;
+
+    this._showToastNotification();
+
+    this.#toastNotificationTimeout = setTimeout(() => {
+      this._hideToastNotification();
+    }, 4000);
+  }
+
   // Locale Storage
   _setLocaleStorage() {
     localStorage.setItem("workouts", JSON.stringify(this.#workouts));
@@ -548,6 +579,7 @@ class App {
     this.#workouts = [];
     this._removeLocalStorage();
     this._refreshState();
+    this._displayToastNotification("danger", "Workouts cleared successfully");
   }
 
   // Dialog
