@@ -25,6 +25,8 @@ export const dom = {
   confirmationDialogCancel: getDomElement(".confirmation-dialog__btn--cancel"),
   confirmationDialogDelete: getDomElement(".confirmation-dialog__btn--delete"),
 
+  toastNotification: getDomElement("#toast-notification"),
+
   startingHint: getDomElement("#starting-hint"),
   clear: getDomElement("#clear"),
 };
