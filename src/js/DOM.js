@@ -13,6 +13,7 @@ export const dom = {
 
   containerWorkouts: getDomElement(".workouts"),
 
+  inputs: getDomElement(".form__input--validate", true),
   inputType: getDomElement(".form__input--type"),
   inputDistance: getDomElement(".form__input--distance"),
   inputDuration: getDomElement(".form__input--duration"),

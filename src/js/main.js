@@ -1,6 +1,6 @@
 import "@/scss/style.scss";
 import { dom } from "./DOM.js";
-import { months } from "./data.js";
+import { months, validationRules } from "./data.js";
 import { getDomElement, toProperCase } from "./utils.js";
 import workoutMarkerIcon from "@/assets/img/workout-marker.svg";
 import L from "leaflet";
@@ -8,6 +8,7 @@ import "leaflet/dist/leaflet.css";
 
 //  ================ Classes ================ //
 class App {
+  // Private Variables
   #map;
   #userCoords = {};
   #mapZoomLevel = 13;
@@ -22,6 +23,7 @@ class App {
   #deleteCb;
   #toastNotificationTimeout;
 
+  // Constructor
   constructor() {
     // Set Page title form .env
     this._setPageTitle();
@@ -42,10 +44,13 @@ class App {
     this._sortWorkouts();
   }
 
+  // Events
   _loadEvents() {
     dom.form.addEventListener("submit", this._formSubmitted.bind(this));
     dom.formCloseIcon.addEventListener("click", this._hideForm.bind(this));
     dom.inputType.addEventListener("change", this._toggleElevationField);
+    dom.inputs.forEach((input) => input.addEventListener("blur", this._validateInput.bind(this, input)));
+    dom.inputs.forEach((input) => input.addEventListener("keydown", this._removeValidationMessage.bind(this, input)));
 
     dom.sortSelectInput.addEventListener("change", this._sortPropertyChange.bind(this));
     dom.sortRadioGroup.addEventListener("change", this._sortOrderChange.bind(this));
@@ -63,7 +68,7 @@ class App {
     window.addEventListener("keydown", this._escapePressed.bind(this));
   }
 
-  // Geolocation
+  // #region ########## Geolocation ########## //
   _getPosition() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(this._geoSuccess.bind(this), this._geoError);
@@ -79,8 +84,9 @@ class App {
   _geoError(error) {
     alert("could not get current position");
   }
+  // #endregion
 
-  // Map
+  // #region ########## Map ########## //
   _loadMap(position = { coords: this.#userCoords }) {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
@@ -129,12 +135,14 @@ class App {
       },
     });
   }
+  // #endregion
 
-  // Form
+  // #region ########## Form ########## //
   _showForm(mapEvt, workoutToEdit = null) {
     if (mapEvt) {
       this.#mapEvent = mapEvt;
     }
+
     dom.form.classList.remove("hidden");
     dom.inputDistance.focus();
     dom.startingHint.classList.add("hidden");
@@ -170,15 +178,35 @@ class App {
   _hideForm() {
     dom.form.style.display = "none";
     dom.form.classList.add("hidden");
+    dom.inputs.forEach((input) => input.classList.remove("invalid"));
 
     setTimeout(() => {
       dom.form.style.display = "grid";
-    }, 1000);
+    }, 10);
 
     this._checkState();
   }
 
   _formSubmitted(evt) {
+    evt.preventDefault();
+    let isValid = true;
+
+    const visibleInputs = [...dom.inputs.filter((input) => !input.closest(".form__row--hidden"))];
+
+    visibleInputs.forEach((input) => {
+      input.classList.remove("invalid");
+    });
+
+    visibleInputs.forEach((input) => {
+      this._validateInput(input);
+
+      if (input.classList.contains("invalid")) {
+        isValid = false;
+      }
+    });
+
+    if (!isValid) return;
+
     if (this.#editFlag) {
       this._saveWorkout(evt);
     } else {
@@ -198,11 +226,50 @@ class App {
     dom.inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
   }
 
-  _showValidationError() {
-    alert("Inputs have to be positive numbers");
+  // #endregion
+
+  // #region ########## Input Validation ########## //
+  _validateInput(inputElement) {
+    const inputName = inputElement.dataset.name; // Get the name of the input from the data-name attribute
+    const value = inputElement.value;
+    const errorElement = inputElement.nextElementSibling;
+    const rules = validationRules[inputName]; // Get the rules for this input
+    let isValid = true;
+    let errorMessage = "";
+
+    switch (true) {
+      case rules.required && value.trim() === "":
+        isValid = false;
+        errorMessage = "The value cannot be empty";
+        break;
+      case rules.type === "number" && isNaN(value):
+        isValid = false;
+        errorMessage = "The value must be a number";
+        break;
+      case rules.positive && +value <= 0:
+        isValid = false;
+        errorMessage = "Number must be positive";
+        break;
+      default:
+        break;
+    }
+
+    if (isValid) {
+      inputElement.classList.remove("invalid");
+    } else {
+      inputElement.classList.add("invalid");
+      errorElement.textContent = errorMessage; // Set the error message text
+    }
   }
 
-  // CRUD
+  _removeValidationMessage(inputElement) {
+    inputElement.classList.remove("invalid");
+    const errorElement = inputElement.nextElementSibling;
+    errorElement.textContent = "";
+  }
+  // #endregion
+
+  // #region ########## CRUD ########## //
   _newWorkout(evt) {
     evt.preventDefault();
 
@@ -216,26 +283,12 @@ class App {
     // If activity running , create running object
     if (type === "running") {
       const cadence = +dom.inputCadence.value;
-
-      // Check if data are valid
-      if (!this._validateInputs(duration, distance, cadence) || !this._allPositives(distance, duration, cadence)) {
-        this._showValidationError();
-        return;
-      }
-
       workout = new Running([lat, lng], distance, duration, cadence);
     }
 
     // If activity cycling , create cycling object
     if (type === "cycling") {
       const elevation = +dom.inputElevation.value;
-
-      // Check if data are valid
-      if (!this._validateInputs(duration, distance, elevation) || !this._allPositives(distance, duration)) {
-        this._showValidationError();
-        return;
-      }
-
       workout = new Cycling([lat, lng], distance, duration, elevation);
     }
 
@@ -354,8 +407,9 @@ class App {
       this._showForm(null, workoutToEdit);
     }
   }
+  // #endregion
 
-  // Display
+  // #region ########## Display ########## //
   _renderWorkoutMarker(workout) {
     L.marker(workout.coords, {
       icon: L.icon({
@@ -471,7 +525,9 @@ class App {
 
   _checkState() {
     if (this.#workouts.length === 0) {
-      dom.startingHint.classList.remove("hidden");
+      if (dom.form.classList.contains("hidden")) {
+        dom.startingHint.classList.remove("hidden");
+      }
       dom.clear.classList.add("hidden");
       dom.sortWrapper.classList.add("hidden");
     } else {
@@ -480,8 +536,9 @@ class App {
       dom.sortWrapper.classList.remove("hidden");
     }
   }
+  // #endregion
 
-  // Sorting
+  // #region ########## Sorting ########## //
   _sortPropertyChange(evt) {
     this.#sort.value = evt.target.value;
     this._sortWorkouts();
@@ -522,8 +579,9 @@ class App {
     // Display Workouts
     this._displayWorkouts();
   }
+  // #endregion
 
-  // Toast Notification
+  // #region ########## Toast Notification ########## //
   _showToastNotification() {
     dom.toastNotification.classList.add("shown");
   }
@@ -545,8 +603,9 @@ class App {
       this._hideToastNotification();
     }, 4000);
   }
+  // #endregion
 
-  // Locale Storage
+  // #region ########## Local Storage ########## //
   _setLocaleStorage() {
     localStorage.setItem("workouts", JSON.stringify(this.#workouts));
   }
@@ -563,8 +622,9 @@ class App {
   _removeLocalStorage() {
     localStorage.removeItem("workouts");
   }
+  // #endregion
 
-  // Clear
+  // #region ########## Clear ########## //
   _clearAllWorkoutsClicked() {
     const msg = "Are you sure you want to delete all workouts? This action cannot be undone.";
     const btnText = "Clear";
@@ -581,8 +641,9 @@ class App {
     this._refreshState();
     this._displayToastNotification("danger", "Workouts cleared successfully");
   }
+  // #endregion
 
-  // Dialog
+  // #region ########## Dialog ########## //
   _showDialog(msg, btnText, cb) {
     dom.confirmationDialogMessage.textContent = msg;
     dom.confirmationDialogDelete.textContent = btnText;
@@ -607,8 +668,9 @@ class App {
       this._hideDialog();
     }
   }
+  // #endregion
 
-  // Other
+  // #region ########## Other ########## //
   _refreshState() {
     this._sortWorkouts();
     this._checkState();
@@ -629,17 +691,10 @@ class App {
     }
   }
 
-  _validateInputs(...inputs) {
-    return inputs.every((input) => Number.isFinite(input));
-  }
-
-  _allPositives(...inputs) {
-    return inputs.every((input) => input > 0);
-  }
-
   _setPageTitle() {
     document.title = import.meta.env.VITE_APP_PAGE_TITLE;
   }
+  // #endregion
 }
 
 class Workout {
