@@ -1,6 +1,7 @@
 @use "../01-Abstracts" as *;
 
 .form {
+  $error-color: getColor(rose-500);
   background-color: getColor(gray-dark-2);
   border-radius: 5px;
   padding: 1.5rem 2.75rem;
@@ -10,7 +11,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 20px repeat(3, 1fr);
-  gap: 0.5rem 2.5rem;
+  gap: 1rem 2.5rem;
 
   /* Match height and activity boxes */
   // height: 9.25rem;
@@ -58,10 +59,45 @@
     color: getColor(slate-600);
     transition: all 0.2s;
 
+    &-wrapper {
+      position: relative;
+    }
+
     &:focus {
       outline: none;
       background-color: #fff;
     }
+
+    &.invalid {
+      outline: 2px solid $error-color;
+      position: relative;
+      animation: shake 0.5s;
+    }
+  }
+
+  .error-message {
+    position: absolute;
+    top: -18px;
+    left: -55px;
+    color: $error-color;
+    font-size: 12px;
+    white-space: nowrap;
+
+    // Hide it
+    transform: translateY(120%);
+    opacity: 0;
+    z-index: -1;
+    visibility: hidden;
+    pointer-events: none;
+    transition: $transition;
+  }
+
+  &__input.invalid + .error-message {
+    transform: translateY(0);
+    opacity: 1;
+    z-index: 10;
+    visibility: visible;
+    pointer-events: all;
   }
 
   &__close-icon {

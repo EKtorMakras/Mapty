@@ -29,8 +29,6 @@
       rel="stylesheet"
     />
 
-    <!-- Leaflet -->
-
     <!-- Js -->
     <script
       src="./src/js/main.js"
@@ -120,31 +118,59 @@
           </div>
           <div class="form__row">
             <label class="form__label">Distance</label>
-            <input
-              class="form__input form__input--distance"
-              placeholder="km"
-            />
+            <div class="form__input-wrapper">
+              <input
+                class="form__input form__input--validate form__input--distance"
+                placeholder="km"
+                data-name="distance"
+              />
+              <span
+                class="error-message"
+                data-name="distance"
+              ></span>
+            </div>
           </div>
           <div class="form__row">
             <label class="form__label">Duration</label>
-            <input
-              class="form__input form__input--duration"
-              placeholder="min"
-            />
+            <div class="form__input-wrapper">
+              <input
+                class="form__input form__input--validate form__input--duration"
+                placeholder="min"
+                data-name="duration"
+              />
+              <span
+                class="error-message"
+                data-name="duration"
+              ></span>
+            </div>
           </div>
           <div class="form__row">
             <label class="form__label">Cadence</label>
-            <input
-              class="form__input form__input--cadence"
-              placeholder="step/min"
-            />
+            <div class="form__input-wrapper">
+              <input
+                class="form__input form__input--validate form__input--cadence"
+                placeholder="step/min"
+                data-name="cadence"
+              />
+              <span
+                class="error-message"
+                data-name="cadence"
+              ></span>
+            </div>
           </div>
           <div class="form__row form__row--hidden">
             <label class="form__label">Elev Gain</label>
-            <input
-              class="form__input form__input--elevation"
-              placeholder="meters"
-            />
+            <div class="form__input-wrapper">
+              <input
+                class="form__input form__input--validate form__input--elevation"
+                placeholder="meters"
+                data-name="elevation"
+              />
+              <span
+                class="error-message"
+                data-name="elevation"
+              ></span>
+            </div>
           </div>
           <button class="form__btn">Add</button>
         </form>
