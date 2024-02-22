@@ -8,7 +8,7 @@ import "leaflet/dist/leaflet.css";
 
 //  ================ Classes ================ //
 class App {
-  // Private Variables
+  //# Private Variables
   #map;
   #userCoords = {};
   #mapZoomLevel = 13;
@@ -23,7 +23,7 @@ class App {
   #deleteCb;
   #toastNotificationTimeout;
 
-  // Constructor
+  //# Constructor
   constructor() {
     // Set Page title form .env
     this._setPageTitle();
@@ -44,7 +44,7 @@ class App {
     this._sortWorkouts();
   }
 
-  // Events
+  //# Events
   _loadEvents() {
     dom.form.addEventListener("submit", this._formSubmitted.bind(this));
     dom.formCloseIcon.addEventListener("click", this._hideForm.bind(this));
@@ -178,7 +178,8 @@ class App {
   _hideForm() {
     dom.form.style.display = "none";
     dom.form.classList.add("hidden");
-    dom.inputs.forEach((input) => input.classList.remove("invalid"));
+
+    this._clearInvalidInputsMessages();
 
     setTimeout(() => {
       dom.form.style.display = "grid";
@@ -193,9 +194,7 @@ class App {
 
     const visibleInputs = [...dom.inputs.filter((input) => !input.closest(".form__row--hidden"))];
 
-    visibleInputs.forEach((input) => {
-      input.classList.remove("invalid");
-    });
+    this._clearInvalidInputsMessages();
 
     visibleInputs.forEach((input) => {
       this._validateInput(input);
@@ -225,7 +224,6 @@ class App {
     dom.inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
     dom.inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
   }
-
   // #endregion
 
   // #region ########## Input Validation ########## //
@@ -266,6 +264,12 @@ class App {
     inputElement.classList.remove("invalid");
     const errorElement = inputElement.nextElementSibling;
     errorElement.textContent = "";
+  }
+
+  _clearInvalidInputsMessages() {
+    dom.inputs.forEach((input) => {
+      input.classList.remove("invalid");
+    });
   }
   // #endregion
 
