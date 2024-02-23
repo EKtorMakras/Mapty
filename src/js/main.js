@@ -53,7 +53,9 @@ class App {
     dom.inputs.forEach((input) => input.addEventListener("keydown", this._removeValidationMessage.bind(this, input)));
 
     dom.sortSelectInput.addEventListener("change", this._sortPropertyChange.bind(this));
-    dom.sortRadioGroup.addEventListener("change", this._sortOrderChange.bind(this));
+    dom.sortRadioWrapper.addEventListener("change", this._sortRadioLabelSelected.bind(this));
+    dom.sortRadioLabels.forEach((label) => label.addEventListener("keydown", this._sortRadioLabelSelected.bind(this)));
+    dom.sortRadioInputs.forEach((input) => input.addEventListener("change", this._sortOrderChange.bind(this)));
 
     dom.containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
     dom.containerWorkouts.addEventListener("click", this._editWorkout.bind(this));
@@ -549,10 +551,22 @@ class App {
   }
 
   _sortOrderChange(evt) {
-    if (evt.target.matches("input[type='radio']")) {
-      this.#sort.order = evt.target.value;
-    }
+    if (!evt.target.matches("input[type='radio']")) return;
+    this.#sort.order = evt.target.value;
     this._sortWorkouts();
+  }
+
+  _sortRadioLabelSelected(evt) {
+    if (evt.code !== "Space" && evt.type !== "change") return;
+    evt.preventDefault();
+
+    const parentGroup = evt.target.closest(".sort__radio-group");
+    const selectedInput = getDomElement(".sort__radio-input", false, parentGroup);
+
+    if (!selectedInput.checked) {
+      selectedInput.checked = true;
+      selectedInput.dispatchEvent(new Event("change"));
+    }
   }
 
   _sortWorkouts() {

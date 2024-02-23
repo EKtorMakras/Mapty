@@ -42,13 +42,14 @@
   <body>
     <!--* ***************************************  Sidebar  *************************************** -->
     <div class="sidebar">
-      <!-- Logo -->
+      <!-- % ***************  Logo  ***************  -->
       <img
         src="./src/assets/img/logo.png"
         alt="Logo"
         class="logo"
       />
 
+      <!-- % ***************  Sorting  ***************  -->
       <div class="sort__wrapper">
         <div class="sort__option-group">
           <label
@@ -67,36 +68,47 @@
           </select>
         </div>
 
-        <div class="sort__radio-group">
-          <input
-            type="radio"
-            id="sort__asc"
-            name="sortOrder"
-            value="asc"
-            checked
-          />
-          <label
-            for="sort__asc"
-            class="sort__radio-label"
-            >Ascending</label
-          >
+        <div class="sort__radio-wrapper">
+          <div class="sort__radio-group">
+            <input
+              class="sort__radio-input"
+              type="radio"
+              id="sort__asc"
+              name="sortOrder"
+              value="asc"
+              tabindex="-1"
+              checked
+            />
+            <label
+              for="sort__asc"
+              class="sort__radio-label"
+              tabindex="0"
+              >Ascending</label
+            >
+          </div>
 
-          <input
-            type="radio"
-            id="sort__desc"
-            name="sortOrder"
-            value="desc"
-          />
-          <label
-            for="sort__desc"
-            class="sort__radio-label"
-            >Descending</label
-          >
+          <div class="sort__radio-group">
+            <input
+              class="sort__radio-input"
+              type="radio"
+              id="sort__desc"
+              name="sortOrder"
+              value="desc"
+              tabindex="-1"
+            />
+            <label
+              for="sort__desc"
+              class="sort__radio-label"
+              tabindex="0"
+              >Descending</label
+            >
+          </div>
         </div>
       </div>
 
       <!-- Workouts -->
       <ul class="workouts">
+        <!-- % ***************  Starting Hint  ***************  -->
         <p
           class="starting-hint"
           id="starting-hint"
@@ -105,6 +117,7 @@
           <span class="ml-2">Click anywhere on the map to add a new workout</span>
         </p>
 
+        <!-- % ***************  Form  ***************  -->
         <form class="form hidden">
           <div class="form__header">
             <i class="fas fa-times form__close-icon"></i>
@@ -176,6 +189,7 @@
         </form>
       </ul>
 
+      <!-- % ***************  Clear All Button  ***************  -->
       <p
         id="clear"
         class="clear-workouts mt-4"
