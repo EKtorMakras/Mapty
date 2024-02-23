@@ -444,12 +444,12 @@ class App {
       <div class="workout__header">
         <h2 class="workout__title">${workout.description}</h2>
         <div class="workout__actions">
-          <span class="workout__action workout__action--edit">
+          <button class="workout__action workout__action--edit">
             <i class="fa-solid fa-pen-to-square"></i>
-          </span>
-          <span class="workout__action workout__action--delete">
+          </button>
+          <button class="workout__action workout__action--delete">
             <i class="fas fa-trash"></i>
-          </span>
+          </button>
         </div>
       </div>
       <div class="workout__details" title="Distance">

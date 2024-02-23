@@ -64,7 +64,7 @@ body {
   }
 
   &__actions {
-    @include flex($gap: 12px);
+    @include flex($gap: 8px);
     line-height: 1;
     margin-top: -2px;
   }
@@ -72,9 +72,14 @@ body {
   &__action {
     font-size: 1.6rem;
     transition: $transition;
+    background: none;
+    padding: 0.3rem;
 
     &--edit {
-      color: getColor(emerald-400);
+      $color: getColor(emerald-400);
+
+      color: $color;
+      @include focus-state($color);
 
       &:hover {
         color: getColor(emerald-600);
@@ -82,7 +87,10 @@ body {
     }
 
     &--delete {
-      color: getColor(rose-400);
+      $color: getColor(rose-400);
+
+      color: $color;
+      @include focus-state($color);
 
       &:hover {
         color: getColor(rose-600);
@@ -153,10 +161,14 @@ body {
 
 // Clear workouts
 .clear-workouts {
-  font-size: 1.3rem;
   cursor: pointer;
+  background: none;
+  width: max-content;
+  padding: 0.5rem;
+  font-size: 1.3rem;
   color: getColor(rose-400);
   transition: $transition;
+  @include focus-state(color("rose-500"));
 
   &:hover {
     color: getColor(rose-500);
