@@ -65,16 +65,24 @@
     transition: background-color 0.2s;
 
     &--cancel {
-      background-color: getColor(gray-light-2);
+      $bgColor: getColor(gray-light-2);
+
+      background-color: $bgColor;
       color: getColor(gray-dark-1);
+      @include focus-state($bgColor);
+
       &:hover {
         background-color: getColor(gray-light-3);
       }
     }
 
     &--delete {
-      background-color: getColor(rose-400);
+      $bgColor: getColor(rose-400);
+
+      background-color: $bgColor;
       color: getColor(white);
+      @include focus-state($bgColor);
+
       &:hover {
         background-color: getColor(rose-500);
       }
