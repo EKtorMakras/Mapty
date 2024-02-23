@@ -58,14 +58,10 @@
     background-color: getColor(gray-light-3);
     color: getColor(slate-600);
     transition: all 0.2s;
+    @include focus-state(color("secondary.base"));
 
     &-wrapper {
       position: relative;
-    }
-
-    &:focus {
-      outline: none;
-      background-color: #fff;
     }
 
     &.invalid {
