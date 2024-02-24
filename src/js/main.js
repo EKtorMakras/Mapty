@@ -25,9 +25,6 @@ class App {
 
   //# Constructor
   constructor() {
-    // Set Page title form .env
-    this._setPageTitle();
-
     // Load Events
     this._loadEvents();
 
@@ -145,6 +142,7 @@ class App {
       this.#mapEvent = mapEvt;
     }
 
+    this._clearInvalidInputsMessages();
     dom.form.classList.remove("hidden");
     dom.inputDistance.focus();
     dom.startingHint.classList.add("hidden");
@@ -548,12 +546,14 @@ class App {
   _sortPropertyChange(evt) {
     this.#sort.value = evt.target.value;
     this._sortWorkouts();
+    this._setLocaleStorage();
   }
 
   _sortOrderChange(evt) {
     if (!evt.target.matches("input[type='radio']")) return;
     this.#sort.order = evt.target.value;
     this._sortWorkouts();
+    this._setLocaleStorage();
   }
 
   _sortRadioLabelSelected(evt) {
@@ -567,6 +567,12 @@ class App {
       selectedInput.checked = true;
       selectedInput.dispatchEvent(new Event("change"));
     }
+  }
+
+  _applyStoredSortPreferences() {
+    dom.sortSelectInput.value = this.#sort.value;
+    const selectedRadioInput = getDomElement(`input[name="sortOrder"][value="${this.#sort.order}"]`);
+    selectedRadioInput.checked = true;
   }
 
   _sortWorkouts() {
@@ -626,15 +632,22 @@ class App {
   // #region ########## Local Storage ########## //
   _setLocaleStorage() {
     localStorage.setItem("workouts", JSON.stringify(this.#workouts));
+    localStorage.setItem("sort", JSON.stringify(this.#sort));
   }
 
   _getLocalStorage() {
-    const data = JSON.parse(localStorage.getItem("workouts"));
+    const workouts = JSON.parse(localStorage.getItem("workouts"));
+    const sort = JSON.parse(localStorage.getItem("sort"));
 
-    if (!data) return;
+    if (workouts) {
+      this.#workouts = workouts;
+      this._sortWorkouts();
+    }
 
-    this.#workouts = data;
-    this._sortWorkouts();
+    if (sort) {
+      this.#sort = sort;
+      this._applyStoredSortPreferences();
+    }
   }
 
   _removeLocalStorage() {
@@ -707,10 +720,6 @@ class App {
       this._hideForm();
       return;
     }
-  }
-
-  _setPageTitle() {
-    document.title = import.meta.env.VITE_APP_PAGE_TITLE;
   }
   // #endregion
 }
