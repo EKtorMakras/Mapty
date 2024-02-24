@@ -8,7 +8,7 @@ import "leaflet/dist/leaflet.css";
 
 //  ================ Classes ================ //
 class App {
-  // Private Variables
+  //# Private Variables
   #map;
   #userCoords = {};
   #mapZoomLevel = 13;
@@ -23,7 +23,7 @@ class App {
   #deleteCb;
   #toastNotificationTimeout;
 
-  // Constructor
+  //# Constructor
   constructor() {
     // Set Page title form .env
     this._setPageTitle();
@@ -44,7 +44,7 @@ class App {
     this._sortWorkouts();
   }
 
-  // Events
+  //# Events
   _loadEvents() {
     dom.form.addEventListener("submit", this._formSubmitted.bind(this));
     dom.formCloseIcon.addEventListener("click", this._hideForm.bind(this));
@@ -53,7 +53,9 @@ class App {
     dom.inputs.forEach((input) => input.addEventListener("keydown", this._removeValidationMessage.bind(this, input)));
 
     dom.sortSelectInput.addEventListener("change", this._sortPropertyChange.bind(this));
-    dom.sortRadioGroup.addEventListener("change", this._sortOrderChange.bind(this));
+    dom.sortRadioWrapper.addEventListener("change", this._sortRadioLabelSelected.bind(this));
+    dom.sortRadioLabels.forEach((label) => label.addEventListener("keydown", this._sortRadioLabelSelected.bind(this)));
+    dom.sortRadioInputs.forEach((input) => input.addEventListener("change", this._sortOrderChange.bind(this)));
 
     dom.containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
     dom.containerWorkouts.addEventListener("click", this._editWorkout.bind(this));
@@ -178,7 +180,8 @@ class App {
   _hideForm() {
     dom.form.style.display = "none";
     dom.form.classList.add("hidden");
-    dom.inputs.forEach((input) => input.classList.remove("invalid"));
+
+    this._clearInvalidInputsMessages();
 
     setTimeout(() => {
       dom.form.style.display = "grid";
@@ -193,9 +196,7 @@ class App {
 
     const visibleInputs = [...dom.inputs.filter((input) => !input.closest(".form__row--hidden"))];
 
-    visibleInputs.forEach((input) => {
-      input.classList.remove("invalid");
-    });
+    this._clearInvalidInputsMessages();
 
     visibleInputs.forEach((input) => {
       this._validateInput(input);
@@ -225,7 +226,6 @@ class App {
     dom.inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
     dom.inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
   }
-
   // #endregion
 
   // #region ########## Input Validation ########## //
@@ -266,6 +266,12 @@ class App {
     inputElement.classList.remove("invalid");
     const errorElement = inputElement.nextElementSibling;
     errorElement.textContent = "";
+  }
+
+  _clearInvalidInputsMessages() {
+    dom.inputs.forEach((input) => {
+      input.classList.remove("invalid");
+    });
   }
   // #endregion
 
@@ -438,12 +444,12 @@ class App {
       <div class="workout__header">
         <h2 class="workout__title">${workout.description}</h2>
         <div class="workout__actions">
-          <span class="workout__action workout__action--edit">
+          <button class="workout__action workout__action--edit">
             <i class="fa-solid fa-pen-to-square"></i>
-          </span>
-          <span class="workout__action workout__action--delete">
+          </button>
+          <button class="workout__action workout__action--delete">
             <i class="fas fa-trash"></i>
-          </span>
+          </button>
         </div>
       </div>
       <div class="workout__details" title="Distance">
@@ -545,10 +551,22 @@ class App {
   }
 
   _sortOrderChange(evt) {
-    if (evt.target.matches("input[type='radio']")) {
-      this.#sort.order = evt.target.value;
-    }
+    if (!evt.target.matches("input[type='radio']")) return;
+    this.#sort.order = evt.target.value;
     this._sortWorkouts();
+  }
+
+  _sortRadioLabelSelected(evt) {
+    if (evt.code !== "Space" && evt.type !== "change") return;
+    evt.preventDefault();
+
+    const parentGroup = evt.target.closest(".sort__radio-group");
+    const selectedInput = getDomElement(".sort__radio-input", false, parentGroup);
+
+    if (!selectedInput.checked) {
+      selectedInput.checked = true;
+      selectedInput.dispatchEvent(new Event("change"));
+    }
   }
 
   _sortWorkouts() {

@@ -9,7 +9,9 @@ export const dom = {
 
   sortWrapper: getDomElement(".sort__wrapper"),
   sortSelectInput: getDomElement("#sort__select-input"),
-  sortRadioGroup: getDomElement(".sort__radio-group"),
+  sortRadioWrapper: getDomElement(".sort__radio-wrapper"),
+  sortRadioLabels: getDomElement(".sort__radio-label", true),
+  sortRadioInputs: getDomElement(".sort__radio-input", true),
 
   containerWorkouts: getDomElement(".workouts"),
 
