@@ -4,6 +4,8 @@ import { months, validationRules } from "./data.js";
 import { getDomElement, toProperCase } from "./utils.js";
 import workoutMarkerIcon from "@/assets/img/workout-marker.svg";
 import L from "leaflet";
+import markerIconUrl from "leaflet/dist/images/marker-icon.png";
+import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 
 //  ================ Classes ================ //
@@ -98,13 +100,31 @@ class App {
       attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
     }).addTo(this.#map);
 
-    L.marker(coords).addTo(this.#map).bindPopup("Your Location").openPopup();
+    L.marker(coords, {
+      icon: L.icon({
+        iconUrl: markerIconUrl,
+        shadowUrl: markerShadowUrl,
+        popupAnchor: [10, 0],
+      }),
+    })
+      .addTo(this.#map)
+      .bindPopup("Your Location", {
+        autoClose: false,
+      })
+      .openPopup();
 
     // Handling clicks on map
     this.#map.on("click", this._showForm.bind(this));
 
     this.#workouts.forEach((workout) => {
       this._renderWorkoutMarker(workout);
+    });
+
+    this.#map.setView(coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 0.2,
+      },
     });
   }
 
